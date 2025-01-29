@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useAuth } from "../context/AuthContext";
@@ -11,20 +11,23 @@ interface LoginFormData {
 }
 
 const LoginForm: React.FC = () => {
-  const { login, error } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
+  const [submitError, setSubmitError] = useState("");
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>();
 
+  // Handles the form submission for the login form
   const onSubmit = async (data: LoginFormData) => {
+    setSubmitError("");
     try {
       await login(data.email, data.password);
       navigate("/");
     } catch (err) {
-      console.error(err);
+      setSubmitError("Invalid credentials");
     }
   };
 
@@ -40,22 +43,25 @@ const LoginForm: React.FC = () => {
         </InfoCard>
 
         <FormGroup>
-          <Label>Email</Label>
+          <Label htmlFor="email">Email</Label>
           <Input
+            id="email"
             type="email"
             {...register("email", {
               required: "Email is required",
               pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
                 message: "Invalid email address",
               },
             })}
           />
           {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
         </FormGroup>
+
         <FormGroup>
-          <Label>Password</Label>
+          <Label htmlFor="password">Password</Label>
           <Input
+            id="password"
             type="password"
             {...register("password", {
               required: "Password is required",
@@ -69,7 +75,8 @@ const LoginForm: React.FC = () => {
             <ErrorMessage>{errors.password.message}</ErrorMessage>
           )}
         </FormGroup>
-        {error && <ErrorMessage>{error}</ErrorMessage>}
+
+        {submitError && <ErrorMessage>{submitError}</ErrorMessage>}
         <Button type="submit">Login</Button>
       </Form>
     </FormContainer>

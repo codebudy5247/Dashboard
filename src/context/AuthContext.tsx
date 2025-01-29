@@ -21,6 +21,16 @@ type AuthAction =
   | { type: "LOGOUT" }
   | { type: "UPDATE_PROFILE"; payload: Partial<User> };
 
+/**
+ * Reducer function to manage authentication state.
+ * The reducer handles the following action types:
+ * - "LOGIN_SUCCESS": Updates the state to reflect a successful login, setting `isAuthenticated` to true, updating the `user` with the payload, clearing any errors, and setting `loading` to false.
+ * - "LOGIN_ERROR": Updates the state to reflect a login error, setting the `error` with the payload and `loading` to false.
+ * - "LOGOUT": Resets the state to the initial state, setting `loading` to false.
+ * - "UPDATE_PROFILE": Updates the user's profile information with the payload.
+ *
+ * If the action type is not recognized, the current state is returned unchanged.
+ */
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
     case "LOGIN_SUCCESS":
@@ -70,6 +80,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
+  /**
+   * Authenticates a user with the provided email and password.
+   * If the credentials match the mock user, it stores the user information
+   * and dispatches a login success action. Otherwise, it throws an error
+   * and dispatches a login error action.
+   */
   const login = async (email: string, password: string) => {
     try {
       if (email === MOCK_USER.email && password === MOCK_USER.password) {
@@ -84,11 +100,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  /**
+   * Logs the user out by removing the authentication item and dispatching a logout action.
+   *
+   * This function performs the following actions:
+   * 1. Calls `removeItem()` to remove the authentication item.
+   * 2. Dispatches a "LOGOUT" action to update the authentication state in the context.
+   */
   const logout = () => {
     removeItem();
     dispatch({ type: "LOGOUT" });
   };
 
+  /**
+   * Updates the user profile with the provided data.
+   * Dispatches an action to update the profile in the state.
+   * If a user exists in the state, merges the existing user data with the new data,
+   * updates the local storage, and shows an alert indicating the profile update.
+   */
   const updateProfile = (data: Partial<User>) => {
     dispatch({ type: "UPDATE_PROFILE", payload: data });
     if (state.user) {
@@ -105,6 +134,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
+/**
+ * Custom hook to access the authentication context.
+ *
+ * This hook provides access to the authentication context, allowing components
+ * to consume authentication-related data and functions.
+ */
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

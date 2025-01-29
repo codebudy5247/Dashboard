@@ -30,6 +30,12 @@ const Layout: React.FC = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
+  /**
+   * Toggles the theme between dark mode and light mode.
+   * Updates the state variable `isDarkMode` to its opposite value.
+   * Sets the `data-theme` attribute on the document's root element
+   * to "dark" if `isDarkMode` is false, and to "light" if `isDarkMode` is true.
+   */
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
     document.documentElement.setAttribute(
@@ -38,6 +44,11 @@ const Layout: React.FC = () => {
     );
   };
 
+  /**
+   * Handles navigation to a specified path and closes the sidebar if the window width is less than or equal to 768 pixels.
+   *
+   * @param {string} path - The path to navigate to.
+   */
   const handleNavigation = (path: string) => {
     navigate(path);
     if (window.innerWidth <= 768) {

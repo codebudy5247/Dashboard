@@ -8,18 +8,6 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Analytics from "./pages/Analytics";
 
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const { isAuthenticated, loading } = useAuth();
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
-};
-
 const App: React.FC = () => {
   return (
     <AuthProvider>
@@ -46,3 +34,23 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+/**
+ * A higher-order component that protects routes from being accessed by unauthenticated users.
+ * It checks the authentication status and conditionally renders the children components or redirects to the login page.
+ *
+ * @param {Object} props - The component props.
+ * @param {React.ReactNode} props.children - The child components to render if the user is authenticated.
+ * @returns {JSX.Element} - The rendered component based on the authentication status.
+ */
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
+};
