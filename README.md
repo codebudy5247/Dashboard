@@ -1,5 +1,8 @@
 > Dashboard
 
+### Deployed Link  
+[Live Demo](https://679a4c3daba2a2008c71d2e9--eclectic-starship-62290a.netlify.app/)  
+
 ### To run this app
 
 ```
