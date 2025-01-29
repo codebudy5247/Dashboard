@@ -6,7 +6,7 @@
 ### To run this app
 
 ```
-# In the roor directory
+# In the root directory
 npm install
 npm run dev
 
